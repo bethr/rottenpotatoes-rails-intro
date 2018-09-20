@@ -1,11 +1,15 @@
 -# edit.html.haml using partial
 
 %h1 Edit Existing Movie
+%h2 Beth was Here!
 
 = form_tag movie_path(@movie), :method => :put do
 
   = label :movie, :title, 'Title'
   = text_field :movie, 'title'
+  
+  = label :movie, :description, 'Description'
+  = text_field :movie, 'description'
 
   = label :movie, :rating, 'Rating'
   = select :movie, :rating, ['G','PG','PG-13','R','NC-17']
