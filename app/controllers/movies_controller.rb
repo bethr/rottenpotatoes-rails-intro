@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-
+  
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -11,14 +11,22 @@ class MoviesController < ApplicationController
   end
 
   def index
-     if request.original_url =~ /title/
-      @movies = Movie.order('title asc') 
-     elsif  request.original_url =~ /release/ 
-      @movies = Movie.order('release_date asc') 
-     else
-      @movies = Movie.all
-     end
-                                                      
+    sort = params[:sort]  
+    case sort
+    when 'title'
+      ordering,@title_header = {:title => :asc}, 'hilite'
+    when 'release_date'
+      ordering,@date_header = {:release_date => :asc}, 'hilite'
+    end
+    @all_ratings = Movie.ratings
+    @selected_ratings = params[:ratings]  || {}
+    
+    if @selected_ratings == {}
+      @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
+    end
+    
+
+    @movies = Movie.where(rating: @selected_ratings.keys).order(ordering)
   end
 
   def new
