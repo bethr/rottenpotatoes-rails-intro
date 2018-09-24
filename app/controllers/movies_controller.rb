@@ -11,7 +11,14 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+     if request.original_url =~ /title/
+      @movies = Movie.order('title asc') 
+     elsif  request.original_url =~ /release/ 
+      @movies = Movie.order('release_date asc') 
+     else
+      @movies = Movie.all
+     end
+                                                      
   end
 
   def new
@@ -20,7 +27,7 @@ class MoviesController < ApplicationController
 
   def create
     @movie = Movie.create!(movie_params)
-    flash[:notice] = "#{@movie.title} was successfully created..."
+    flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
 
